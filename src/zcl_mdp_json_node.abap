@@ -94,8 +94,12 @@ CLASS ZCL_MDP_JSON_NODE IMPLEMENTATION.
 * | [<-()] NODE                           TYPE REF TO ZCL_MDP_JSON_NODE
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD array_get_child_node.
-
-    node = me->array_children[  index  ]-node .
+    " >= NW 7.40
+    "node = me->array_children[  index  ]-node .
+    " < NW 7.40
+    DATA array_node like LINE OF me->array_children[].
+    READ TABLE me->array_children[] INDEX index INTO array_node.
+    node = array_node-node.
 
   ENDMETHOD.
 
@@ -250,8 +254,12 @@ CLASS ZCL_MDP_JSON_NODE IMPLEMENTATION.
 * | [<-()] NODE                           TYPE REF TO ZCL_MDP_JSON_NODE
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD object_get_child_node.
-
-    node = me->object_children[ key = key  ]-node .
+    " >= NW 7.40
+    "node = me->object_children[ key = key  ]-node . 
+    " < NW 7.40
+    DATA wa_object_children like LINE OF me->object_children.
+    READ TABLE me->object_children[] INTO wa_object_children WITH KEY key = key.
+    node = wa_object_children-node.
 
   ENDMETHOD.
 
